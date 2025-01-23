@@ -5,7 +5,9 @@ int main()
     // Initialisation
     gl::init("TPs de Rendering"); // On crée une fenêtre et on choisit son nom
     gl::maximize_window(); // On peut la maximiser si on veut
-    
+
+    auto camera = gl::Camera{};
+    gl::set_events_callbacks({camera.events_callbacks()});
 
     auto const shader = gl::Shader{{
         .vertex   = gl::ShaderSource::File{"res/vertex.glsl"},
@@ -31,6 +33,8 @@ int main()
     while (gl::window_is_open())
     {
         // Rendu à chaque frame
+        glm::mat4 const view_matrix = camera.view_matrix();
+
         glClearColor(0.6f, 0.2f, 0.5f, 1.f); // Choisis la couleur à utiliser. Les paramètres sont R, G, B, A avec des valeurs qui vont de 0 à 1
         glClear(GL_COLOR_BUFFER_BIT); // Exécute concrètement l'action d'appliquer sur tout l'écran la couleur choisie au-dessus
         
@@ -38,5 +42,6 @@ int main()
         shader.set_uniform("aspect_ratio",gl::framebuffer_aspect_ratio());
         shader.set_uniform("time", gl::time_in_seconds());
         rectangle_mesh.draw(); // C'est ce qu'on appelle un "draw call" : on envoie l'instruction à la carte graphique de dessiner notre mesh.
+    
     }
 }
