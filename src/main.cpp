@@ -31,10 +31,10 @@ int main()
         .vertex_buffers = {{
             .layout = {gl::VertexAttribute::Position2D{0}, gl::VertexAttribute::UV{1}},
             .data   = {
-                -1.0f, -1.0f, 0.0f, 0.0f, // Position2D du 1er sommet
-                +1.0f, -1.0f, +1.0f, 0.0f, // Position2D du 2ème sommet
-                +1.0f, +1.0f, +1.0f, +1.0f, // Position2D du 3ème sommet
-                -1.0f, +1.0f,  0.0f, +1.0f  // Position2D du 4ème sommet
+                -1.0f, -1.0f, -1.0f, -1.0f, // Position2D du 1er sommet
+                +1.0f, -1.0f, +2.0f, -1.0f, // Position2D du 2ème sommet
+                +1.0f, +1.0f, +2.0f, +2.0f, // Position2D du 3ème sommet
+                -1.0f, +1.0f, -1.0f, +2.0f  // Position2D du 4ème sommet
             },
         }},
         .index_buffer   = {
