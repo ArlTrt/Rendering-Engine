@@ -43,6 +43,22 @@ int main()
         },
     }};
 
+    auto const render_mesh = gl::Mesh{{
+        .vertex_buffers = {{
+            .layout = {gl::VertexAttribute::Position2D{0}, gl::VertexAttribute::UV{1}},
+            .data   = {
+                -1.0f, -1.0f, 0.0f, 0.0f, // Position2D du 1er sommet
+                +1.0f, -1.0f, +1.0f, 0.0f, // Position2D du 2ème sommet
+                +1.0f, +1.0f, +1.0f, +1.0f, // Position2D du 3ème sommet
+                -1.0f, +1.0f, 0.0f, +1.0f  // Position2D du 4ème sommet
+            },
+        }},
+        .index_buffer   = {
+            0, 1, 2, // Indices du premier triangle : on utilise le 1er, 2ème et 3ème sommet
+            0, 2, 3  // Indices du deuxième triangle : on utilise le 1er, 3ème et 4ème sommet
+        },
+    }};
+
     auto const texture = gl::Texture{
         gl::TextureSource::File{ // Peut être un fichier, ou directement un tableau de pixels
             .path           = "res/texture.png",
@@ -56,6 +72,39 @@ int main()
             .wrap_y               = gl::Wrap::Repeat,   // Idem, mais sur l'axe Y. En général on met le même wrap mode sur les deux axes.
         }
     };
+
+    auto render_target = gl::RenderTarget{gl::RenderTarget_Descriptor{
+        .width          = gl::framebuffer_width_in_pixels(),
+        .height         = gl::framebuffer_height_in_pixels(),
+        .color_textures = {
+            gl::ColorAttachment_Descriptor{
+                .format  = gl::InternalFormat_Color::RGBA8,
+                .options = {
+                    .minification_filter  = gl::Filter::NearestNeighbour, // On va toujours afficher la texture à la taille de l'écran,
+                    .magnification_filter = gl::Filter::NearestNeighbour, // donc les filtres n'auront pas d'effet. Tant qu'à faire on choisit le moins coûteux.
+                    .wrap_x               = gl::Wrap::ClampToEdge,
+                    .wrap_y               = gl::Wrap::ClampToEdge,
+                },
+            },
+        },
+        .depth_stencil_texture = gl::DepthStencilAttachment_Descriptor{
+            .format  = gl::InternalFormat_DepthStencil::Depth32F,
+            .options = {
+                .minification_filter  = gl::Filter::NearestNeighbour,
+                .magnification_filter = gl::Filter::NearestNeighbour,
+                .wrap_x               = gl::Wrap::ClampToEdge,
+                .wrap_y               = gl::Wrap::ClampToEdge,
+            },
+        },
+    }};
+
+    gl::set_events_callbacks({
+        camera.events_callbacks(),
+        {.on_framebuffer_resized = [&](gl::FramebufferResizedEvent const& e) {
+            if(e.width_in_pixels != 0 && e.height_in_pixels != 0) // OpenGL crash si on tente de faire une render target avec une taille de 0
+                render_target.resize(e.width_in_pixels, e.height_in_pixels);
+        }},
+    });
 
     auto const cube_mesh = gl::Mesh{{
         .vertex_buffers = {{
@@ -111,6 +160,13 @@ int main()
         shader.set_uniform("time", gl::time_in_seconds());
         shader.set_uniform("my_texture", texture);
         //uv_mesh.draw(); // C'est ce qu'on appelle un "draw call" : on envoie l'instruction à la carte graphique de dessiner notre mesh.
-        cube_mesh.draw();
+        //cube_mesh.draw();
+        render_mesh.draw();
+
+        render_target.render([&]() {
+            glClearColor(1.f, 0.f, 0.f, 1.f); // Dessine du rouge, non pas à l'écran, mais sur notre render target
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            cube_mesh.draw();
+        });
     }
 }
