@@ -59,16 +59,16 @@ int main()
 
     auto const cube_mesh = gl::Mesh{{
         .vertex_buffers = {{
-            .layout = {gl::VertexAttribute::Position3D{0}},
+            .layout = {gl::VertexAttribute::Position3D{0}, gl::VertexAttribute::UV{1}},
             .data   = {
-                -0.5f, -0.5f, -0.5f,// Position3D du 1er sommet
-                +0.5f, -0.5f, -0.5f,// Position3D du 2ème sommet
-                +0.5f, +0.5f, -0.5f,// Position3D du 3ème sommet
-                -0.5f, +0.5f, -0.5f,// Position3D du 4ème sommet
-                -0.5f, -0.5f, +0.5f,// Position3D du 5ème sommet
-                +0.5f, -0.5f, +0.5f,// Position3D du 6ème sommet
-                +0.5f, +0.5f, +0.5f,// Position3D du 7ème sommet
-                -0.5f, +0.5f, +0.5f// Position3D du 8ème sommet
+                -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,// Position3D du 1er sommet
+                +0.5f, -0.5f, -0.5f,  1.0f, 0.0f,// Position3D du 2ème sommet
+                +0.5f, +0.5f, -0.5f,  1.0f, 1.0f,// Position3D du 3ème sommet
+                -0.5f, +0.5f, -0.5f,  0.0f, 1.0f,// Position3D du 4ème sommet
+                -0.5f, -0.5f, +0.5f,  0.0f, 0.0f,// Position3D du 5ème sommet
+                +0.5f, -0.5f, +0.5f,  1.0f, 0.0f,// Position3D du 6ème sommet
+                +0.5f, +0.5f, +0.5f,  1.0f, 1.0f,// Position3D du 7ème sommet
+                -0.5f, +0.5f, +0.5f,  0.0f, 1.0f,// Position3D du 8ème sommet
             },
         }},
         .index_buffer   = {
@@ -110,7 +110,7 @@ int main()
         shader.set_uniform("aspect_ratio",gl::framebuffer_aspect_ratio());
         shader.set_uniform("time", gl::time_in_seconds());
         shader.set_uniform("my_texture", texture);
-        uv_mesh.draw(); // C'est ce qu'on appelle un "draw call" : on envoie l'instruction à la carte graphique de dessiner notre mesh.
-       
+        //uv_mesh.draw(); // C'est ce qu'on appelle un "draw call" : on envoie l'instruction à la carte graphique de dessiner notre mesh.
+        cube_mesh.draw();
     }
 }

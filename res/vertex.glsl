@@ -23,5 +23,5 @@ void main()
     //position.y += 0.1 * time;
     //gl_Position = vec4(position, 1.);
     gl_Position = vec4(position, 1.);
-    //gl_Position = view_projection_matrix * vec4(in_position,  1.);
+    gl_Position = view_projection_matrix * vec4(in_position,  1.);
 }
