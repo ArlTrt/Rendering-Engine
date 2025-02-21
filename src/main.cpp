@@ -27,6 +27,38 @@ int main()
         .fragment = gl::ShaderSource::File{"res/fragment.glsl"},
     }};
 
+    auto const uv_mesh = gl::Mesh{{
+        .vertex_buffers = {{
+            .layout = {gl::VertexAttribute::Position2D{0}, gl::VertexAttribute::UV{1}},
+            .data   = {
+                -1.0f, -1.0f, 0.0f, 0.0f, // Position2D du 1er sommet
+                +1.0f, -1.0f, +1.0f, 0.0f, // Position2D du 2ème sommet
+                +1.0f, +1.0f, +1.0f, +1.0f, // Position2D du 3ème sommet
+                -1.0f, +1.0f,  0.0f, +1.0f  // Position2D du 4ème sommet
+            },
+        }},
+        .index_buffer   = {
+            0, 1, 2, // Indices du premier triangle : on utilise le 1er, 2ème et 3ème sommet
+            0, 2, 3  // Indices du deuxième triangle : on utilise le 1er, 3ème et 4ème sommet
+        },
+    }};
+
+    auto const rectangle_mesh = gl::Mesh{{
+        .vertex_buffers = {{
+            .layout = {gl::VertexAttribute::Position2D{0}},
+            .data   = {
+                -1.0f, -1.0f, // Position2D du 1er sommet
+                +1.0f, -1.0f, // Position2D du 2ème sommet
+                +1.0f, +1.0f, // Position2D du 3ème sommet
+                -1.0f, +1.0f  // Position2D du 4ème sommet
+            },
+        }},
+        .index_buffer   = {
+            0, 1, 2, // Indices du premier triangle : on utilise le 1er, 2ème et 3ème sommet
+            0, 2, 3  // Indices du deuxième triangle : on utilise le 1er, 3ème et 4ème sommet
+        },
+    }};
+
     auto const cube_mesh = gl::Mesh{{
         .vertex_buffers = {{
             .layout = {gl::VertexAttribute::Position3D{0}},
@@ -79,7 +111,7 @@ int main()
         shader.set_uniform("view_projection_matrix", model_view_projection_matrix);
         shader.set_uniform("aspect_ratio",gl::framebuffer_aspect_ratio());
         shader.set_uniform("time", gl::time_in_seconds());
-        cube_mesh.draw(); // C'est ce qu'on appelle un "draw call" : on envoie l'instruction à la carte graphique de dessiner notre mesh.
-    
+        uv_mesh.draw(); // C'est ce qu'on appelle un "draw call" : on envoie l'instruction à la carte graphique de dessiner notre mesh.
+       
     }
 }
