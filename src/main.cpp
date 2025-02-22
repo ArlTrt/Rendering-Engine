@@ -27,6 +27,11 @@ int main()
         .fragment = gl::ShaderSource::File{"res/fragment.glsl"},
     }};
 
+    auto const render_shader = gl::Shader{{
+        .vertex   = gl::ShaderSource::File{"res/render_vertex.glsl"},
+        .fragment = gl::ShaderSource::File{"res/render_fragment.glsl"},
+    }};
+
     auto const uv_mesh = gl::Mesh{{
         .vertex_buffers = {{
             .layout = {gl::VertexAttribute::Position2D{0}, gl::VertexAttribute::UV{1}},
@@ -97,8 +102,6 @@ int main()
             },
         },
     }};
-
-    
 
     gl::set_events_callbacks({
         camera.events_callbacks(),
@@ -171,8 +174,8 @@ int main()
             cube_mesh.draw();
         });
         
-
-        shader.set_uniform("render_texture", render_target);
+        render_shader.bind();
+        render_shader.set_uniform("render_texture", render_target.color_texture(0));
         render_mesh.draw();
     }
 }
