@@ -4,6 +4,7 @@ out vec4 out_color;
 in vec3 vertex_position;
 in vec2 uv;
 uniform sampler2D my_texture;
+uniform RenderTarget render_texture;
 
 void main()
 {
@@ -12,4 +13,7 @@ void main()
     //out_color = vec4(uv.x, uv.y, 0., 1.);
     vec4 texture_color = texture(my_texture, uv);
     out_color = texture_color;
+
+    vec4 render_color = texture(render_texture, uv);
+    out_color = render_color;
 }

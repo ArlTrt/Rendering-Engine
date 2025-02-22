@@ -45,7 +45,7 @@ int main()
 
     auto const render_mesh = gl::Mesh{{
         .vertex_buffers = {{
-            .layout = {gl::VertexAttribute::Position2D{0}, gl::VertexAttribute::UV{1}},
+            .layout = {gl::VertexAttribute::Position2D{2}, gl::VertexAttribute::UV{1}},
             .data   = {
                 -1.0f, -1.0f, 0.0f, 0.0f, // Position2D du 1er sommet
                 +1.0f, -1.0f, +1.0f, 0.0f, // Position2D du 2ème sommet
@@ -97,6 +97,8 @@ int main()
             },
         },
     }};
+
+    
 
     gl::set_events_callbacks({
         camera.events_callbacks(),
@@ -161,12 +163,16 @@ int main()
         shader.set_uniform("my_texture", texture);
         //uv_mesh.draw(); // C'est ce qu'on appelle un "draw call" : on envoie l'instruction à la carte graphique de dessiner notre mesh.
         //cube_mesh.draw();
-        render_mesh.draw();
+        
 
         render_target.render([&]() {
             glClearColor(1.f, 0.f, 0.f, 1.f); // Dessine du rouge, non pas à l'écran, mais sur notre render target
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             cube_mesh.draw();
         });
+        
+
+        shader.set_uniform("render_texture", render_target);
+        render_mesh.draw();
     }
 }
