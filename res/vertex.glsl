@@ -7,6 +7,7 @@ layout(location = 2) in vec3 normal_position;
 uniform float aspect_ratio;
 uniform float time;
 uniform mat4 view_projection_matrix;
+uniform mat4 model_matrix;
 out vec3 vertex_position;
 out vec2 uv;
 out vec3 normal;
@@ -15,8 +16,8 @@ void main()
 {
     vec3 position = in_position;
     uv = uv_position;
-    normal = normal_position;
-    //vertex_position = in_position;
+    normal = vec3(model_matrix*vec4(normal_position, 0));
+    vertex_position = in_position;
 
     //position.x += 0.4;
     //position.y += 0.4; 
